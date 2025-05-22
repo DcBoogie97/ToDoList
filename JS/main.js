@@ -1,27 +1,26 @@
 // Selectors
+let toDoInput, toDoBtn, toDoList, standardTheme, lightTheme, darkerTheme;
 
-const toDoInput = document.querySelector('.todo-input');
-const toDoBtn = document.querySelector('.todo-btn');
-const toDoList = document.querySelector('.todo-list');
-const standardTheme = document.querySelector('.standard-theme');
-const lightTheme = document.querySelector('.light-theme');
-const darkerTheme = document.querySelector('.darker-theme');
+// Setup function to initialize selectors and event listeners
+function initApp() {
+    toDoInput = document.querySelector('.todo-input');
+    toDoBtn = document.querySelector('.todo-btn');
+    toDoList = document.querySelector('.todo-list');
+    standardTheme = document.querySelector('.standard-theme');
+    lightTheme = document.querySelector('.light-theme');
+    darkerTheme = document.querySelector('.darker-theme');
 
+    if (toDoBtn) toDoBtn.addEventListener('click', addToDo);
+    if (toDoList) toDoList.addEventListener('click', deletecheck);
+    document.addEventListener("DOMContentLoaded", getTodos);
+    if (standardTheme) standardTheme.addEventListener('click', () => changeTheme('standard'));
+    if (lightTheme) lightTheme.addEventListener('click', () => changeTheme('light'));
+    if (darkerTheme) darkerTheme.addEventListener('click', () => changeTheme('darker'));
 
-// Event Listeners
-
-toDoBtn.addEventListener('click', addToDo);
-toDoList.addEventListener('click', deletecheck);
-document.addEventListener("DOMContentLoaded", getTodos);
-standardTheme.addEventListener('click', () => changeTheme('standard'));
-lightTheme.addEventListener('click', () => changeTheme('light'));
-darkerTheme.addEventListener('click', () => changeTheme('darker'));
-
-// Check if one theme has been set previously and apply it (or std theme if not found):
-let savedTheme = localStorage.getItem('savedTheme');
-savedTheme === null ?
-    changeTheme('standard')
-    : changeTheme(localStorage.getItem('savedTheme'));
+    // Theme setup
+    let savedTheme = localStorage.getItem('savedTheme');
+    savedTheme === null ? changeTheme('standard') : changeTheme(savedTheme);
+}
 
 // Functions;
 function addToDo(event) {
@@ -35,8 +34,8 @@ function addToDo(event) {
     // Create LI
     const newToDo = document.createElement('li');
     if (toDoInput.value === '') {
-            alert("You must write something!");
-        } 
+        alert("You must write something!");
+    }
     else {
         // newToDo.innerText = "hey";
         newToDo.innerText = toDoInput.value;
@@ -200,4 +199,20 @@ function changeTheme(color) {
             }
         });
     });
+}
+
+// Export functions for testing
+if (typeof module !== 'undefined') {
+    module.exports = {
+        addToDo,
+        deletecheck,
+        savelocal,
+        getTodos,
+        removeLocalTodos,
+        changeTheme,
+        initApp
+    };
+} else {
+    // Only run in browser, not in tests
+    initApp();
 }
